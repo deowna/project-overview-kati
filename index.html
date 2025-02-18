@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        input, button { margin: 10px; padding: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h2>Enter Your Data</h2>
+    
+    <input type="text" id="username" placeholder="Enter your name">
+    <input type="number" id="number" min="0" max="99" placeholder="Pick a number (0-99)">
+    <button onclick="submitData()">Submit</button>
+
+    <p id="message"></p>
+
+    <script>
+        function submitData() {
+            let username = document.getElementById("username").value;
+            let number = document.getElementById("number").value;
+
+            if (!username || number === "") {
+                document.getElementById("message").innerText = "Please enter both fields.";
+                return;
+            }
+
+            let data = { username: username, number: number };
+
+            fetch("https://script.google.com/macros/s/AKfycby3ivNwvwokjz362BY2zADre84tijCymaBRYZX_bADnY1Td_fcWAvjFhJwamPM5kQUbWw/exec", {  // ✅ Replace with your new Web App URL
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())  // Get raw text response
+            .then(result => {
+                console.log("Server Response:", result);
+                document.getElementById("message").innerText = result;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("message").innerText = "Error saving data: " + error;
+            });
+        }
+    </script>
+</body>
+</html>
